@@ -6,105 +6,52 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calcados.Models;
+using Microsoft.Extensions.Logging;
+using Calcados.Services;
 
 namespace Calcados.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CalcadoItemsController : ControllerBase
-    {
-        private readonly CalcadoContext _context;
+    {       
+        private readonly ILogger<CalcadoItemsController> _logger;
+        private readonly ICalcadoService _calcado;
 
-        public CalcadoItemsController(CalcadoContext context)
+        public CalcadoItemsController(ILogger<CalcadoItemsController> logger, ICalcadoService calcado)
         {
-            _context = context;
+            _logger = logger;
+            _calcado = calcado;
         }
 
-        // GET: api/CalcadoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CalcadoItem>>> GetCalcadoItems()
+        public IActionResult TodosCalcados()
         {
-            return await _context.CalcadoItems.ToListAsync();
+            return Ok(_calcado.RetonarListaCalcado());
         }
 
-        // GET: api/CalcadoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CalcadoItem>> GetCalcadoItem(long id)
+        public IActionResult calcado(int id)
         {
-            var calcadoItem = await _context.CalcadoItems.FindAsync(id);
-
-            if (calcadoItem == null)
-            {
-                return NotFound();
-            }
-
-            return calcadoItem;
+            return Ok(_calcado.RetornarCalcadoPorId(id));
         }
 
-        // PUT: api/CalcadoItems/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCalcadoItem(long id, CalcadoItem calcadoItem)
-        {
-            if (id != calcadoItem.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(calcadoItem).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CalcadoItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/CalcadoItems
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<CalcadoItem>> PostCalcadoItem(CalcadoItem calcadoItem)
+        public IActionResult calcadoAdd([FromBody] CalcadoItem novoCalcado)
         {
-            _context.CalcadoItems.Add(calcadoItem);
-            await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetCalcadoItem", new { id = calcadoItem.Id }, calcadoItem);
-            return CreatedAtAction(nameof(GetCalcadoItems), new { id = calcadoItem.Id}, calcadoItem);
+            return Ok(_calcado.AdicionarCalcado(novoCalcado));
         }
 
-        // DELETE: api/CalcadoItems/5
+        [HttpPut]
+        public IActionResult calcadoUpdate(CalcadoItem novoCalcado)
+        {
+            return Ok(_calcado.AtualizarCalcado(novoCalcado));
+        }
+
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CalcadoItem>> DeleteCalcadoItem(long id)
+        public IActionResult calcadoDelete(int id)
         {
-            var calcadoItem = await _context.CalcadoItems.FindAsync(id);
-            if (calcadoItem == null)
-            {
-                return NotFound();
-            }
-
-            _context.CalcadoItems.Remove(calcadoItem);
-            await _context.SaveChangesAsync();
-
-            return calcadoItem;
-        }
-
-        private bool CalcadoItemExists(long id)
-        {
-            return _context.CalcadoItems.Any(e => e.Id == id);
+            return Ok(_calcado.DeletarCalcado(id));
         }
     }
 }
