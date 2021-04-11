@@ -6,6 +6,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Calcados.Models;
 using Calcados.Services;
+using Calcados.UseCase;
+using Calcados.Repositórios;
+using Calcados.Adapters;
+using Calcados.Bordas.Adapter;
 
 namespace Calcados
 {
@@ -21,10 +25,17 @@ namespace Calcados
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CalcadoContext>
-                (option => option.UseNpgsql(Configuration.GetConnectionString("CalcadoDatabase")));
+            services.AddDbContext<CalcadoContext>(option => option.UseNpgsql(Configuration.GetConnectionString("CalcadoDatabase")));
 
-            services.AddScoped<ICalcadoService, CalcadoService>();
+            //services.AddScoped<ICalcadoService, CalcadoService>();
+            services.AddScoped<IAdicionarCalcadosUseCase, AdicionarCalcadoUseCase>();
+            services.AddScoped<IAtualizarCalcadosUseCase, AtualizarCalcadoUseCase>();
+            services.AddScoped<IDeletarCalcadosUseCase, DeletarCalcadoUseCase>();
+            services.AddScoped<IRetornarCalcadosPorIdUseCase, RetornarCalcadoPorIdUseCase>();
+            services.AddScoped<IRetornarCalcadosUseCase, RetornarCalcadoUseCase>();
+
+            services.AddScoped<IRepositorioCalcados, RepositorioCalcados>();
+            services.AddScoped<IAdicionarCalcadoAdapter, AdicionarCalcadoAdapter>();
 
             services.AddControllers();
         }

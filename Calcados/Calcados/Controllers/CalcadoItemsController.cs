@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Calcados.Models;
 using Microsoft.Extensions.Logging;
 using Calcados.Services;
+using Calcados.UseCase;
+using Calcados.DTO.Calcados.AdicionarCalcado;
 
 namespace Calcados.Controllers
 {
@@ -17,11 +19,13 @@ namespace Calcados.Controllers
     {       
         private readonly ILogger<CalcadoItemsController> _logger;
         private readonly ICalcadoService _calcado;
+        private readonly IAdicionarCalcadosUseCase _adicionarCalcadoUseCase;
 
-        public CalcadoItemsController(ILogger<CalcadoItemsController> logger, ICalcadoService calcado)
+        public CalcadoItemsController(ILogger<CalcadoItemsController> logger, ICalcadoService calcado, IAdicionarCalcadosUseCase adicionarCalcadoUseCase)
         {
             _logger = logger;
             _calcado = calcado;
+            _adicionarCalcadoUseCase = adicionarCalcadoUseCase;
         }
 
         [HttpGet]
@@ -37,9 +41,10 @@ namespace Calcados.Controllers
         }
 
         [HttpPost]
-        public IActionResult calcadoAdd([FromBody] CalcadoItem novoCalcado)
+        public IActionResult calcadoAdd([FromBody] AdicionarCalcadoRequest novoCalcado)
         {
-            return Ok(_calcado.AdicionarCalcado(novoCalcado));
+            return Ok(_adicionarCalcadoUseCase.Executar(novoCalcado));
+            //return Ok(_calcado.AdicionarCalcado(novoCalcado));
         }
 
         [HttpPut]
