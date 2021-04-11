@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Calcados.Models;
+using Calcados.Services;
 
 namespace Calcados
 {
@@ -22,6 +23,8 @@ namespace Calcados
         {
             services.AddDbContext<CalcadoContext>
                 (option => option.UseNpgsql(Configuration.GetConnectionString("CalcadoDatabase")));
+
+            services.AddScoped<ICalcadoService, CalcadoService>();
 
             services.AddControllers();
         }
