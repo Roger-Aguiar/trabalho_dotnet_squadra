@@ -7,5 +7,6 @@ namespace Calcados.DTO.Calcados.RetornarCalcadoPorId
 {
     public class RetornarCalcadoPorIdRequest
     {
+        public int id { get; set; }
     }
 }

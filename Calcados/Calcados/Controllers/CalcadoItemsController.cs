@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Calcados.Services;
 using Calcados.UseCase;
 using Calcados.DTO.Calcados.AdicionarCalcado;
+using Calcados.DTO.Calcados.RetornarCalcadoPorId;
 
 namespace Calcados.Controllers
 {
@@ -15,15 +16,18 @@ namespace Calcados.Controllers
         private readonly ICalcadoService _calcado;
         private readonly IAdicionarCalcadosUseCase _adicionarCalcadoUseCase;
         private readonly IRetornarCalcadosUseCase _calcadosSelecionados;
+        private readonly IRetornarCalcadosPorIdUseCase _calcadoPorId;
 
         public CalcadoItemsController(ILogger<CalcadoItemsController> logger, ICalcadoService calcado, 
                                       IAdicionarCalcadosUseCase adicionarCalcadoUseCase,
-                                      IRetornarCalcadosUseCase calcadosSelecionados)
+                                      IRetornarCalcadosUseCase calcadosSelecionados,
+                                      IRetornarCalcadosPorIdUseCase calcadoPorId)
         {
             _logger = logger;
             _calcado = calcado;
             _adicionarCalcadoUseCase = adicionarCalcadoUseCase;
             _calcadosSelecionados = calcadosSelecionados;
+            _calcadoPorId = calcadoPorId;
         }
                 
         [HttpGet]
@@ -32,10 +36,25 @@ namespace Calcados.Controllers
             return Ok(_calcadosSelecionados.Executar());
         }
 
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public IActionResult calcado(int id)
         {
             return Ok(_calcado.RetornarCalcadoPorId(id));
+        }*/
+
+        [HttpGet("{id}")]
+        public IActionResult ObterCalcadoPorId(int id)
+        {
+            if(id <= 0)
+            {
+                return BadRequest("Código inválido!");
+            }
+            else
+            {
+                var request = new RetornarCalcadoPorIdRequest();
+                request.id = id;
+                return Ok(_calcadoPorId.Executar(request));
+            }           
         }
 
         [HttpPost]

@@ -1,9 +1,7 @@
-﻿using Calcados.DTO.Calcados.AdicionarCalcado;
-using Calcados.Models;
+﻿using Calcados.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Calcados.Repositórios
 {
@@ -22,9 +20,31 @@ namespace Calcados.Repositórios
             _local.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CalcadoItem ObterCalcadoPorId(int id)
+        {
+            foreach(CalcadoItem calcado in _local.CalcadoItems)
+            {
+                if (calcado.Id == id)
+                    return calcado;
+                else
+                    continue;
+            }
+            return null;
+        }
+
         public List<CalcadoItem> ObterListaDeCalcados()
         {
             return _local.CalcadoItems.ToList();            
+        }
+
+        public bool Update(CalcadoItem calcado)
+        {
+            throw new NotImplementedException();
         }
     }
 }
