@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Calcados.Models;
 using Microsoft.Extensions.Logging;
 using Calcados.Services;
@@ -20,18 +14,22 @@ namespace Calcados.Controllers
         private readonly ILogger<CalcadoItemsController> _logger;
         private readonly ICalcadoService _calcado;
         private readonly IAdicionarCalcadosUseCase _adicionarCalcadoUseCase;
+        private readonly IRetornarCalcadosUseCase _calcadosSelecionados;
 
-        public CalcadoItemsController(ILogger<CalcadoItemsController> logger, ICalcadoService calcado, IAdicionarCalcadosUseCase adicionarCalcadoUseCase)
+        public CalcadoItemsController(ILogger<CalcadoItemsController> logger, ICalcadoService calcado, 
+                                      IAdicionarCalcadosUseCase adicionarCalcadoUseCase,
+                                      IRetornarCalcadosUseCase calcadosSelecionados)
         {
             _logger = logger;
             _calcado = calcado;
             _adicionarCalcadoUseCase = adicionarCalcadoUseCase;
+            _calcadosSelecionados = calcadosSelecionados;
         }
-
+                
         [HttpGet]
-        public IActionResult TodosCalcados()
+        public IActionResult ObterListaDeCalcados()
         {
-            return Ok(_calcado.RetonarListaCalcado());
+            return Ok(_calcadosSelecionados.Executar());
         }
 
         [HttpGet("{id}")]
@@ -43,8 +41,7 @@ namespace Calcados.Controllers
         [HttpPost]
         public IActionResult calcadoAdd([FromBody] AdicionarCalcadoRequest novoCalcado)
         {
-            return Ok(_adicionarCalcadoUseCase.Executar(novoCalcado));
-            //return Ok(_calcado.AdicionarCalcado(novoCalcado));
+            return Ok(_adicionarCalcadoUseCase.Executar(novoCalcado));            
         }
 
         [HttpPut]

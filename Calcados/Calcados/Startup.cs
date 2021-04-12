@@ -27,7 +27,8 @@ namespace Calcados
         {
             services.AddDbContext<CalcadoContext>(option => option.UseNpgsql(Configuration.GetConnectionString("CalcadoDatabase")));
 
-            //services.AddScoped<ICalcadoService, CalcadoService>();
+            services.AddScoped<ICalcadoService, CalcadoService>();
+
             services.AddScoped<IAdicionarCalcadosUseCase, AdicionarCalcadoUseCase>();
             services.AddScoped<IAtualizarCalcadosUseCase, AtualizarCalcadoUseCase>();
             services.AddScoped<IDeletarCalcadosUseCase, DeletarCalcadoUseCase>();
@@ -35,8 +36,9 @@ namespace Calcados
             services.AddScoped<IRetornarCalcadosUseCase, RetornarCalcadoUseCase>();
 
             services.AddScoped<IRepositorioCalcados, RepositorioCalcados>();
-            services.AddScoped<IAdicionarCalcadoAdapter, AdicionarCalcadoAdapter>();
 
+            services.AddScoped<IAdicionarCalcadoAdapter, AdicionarCalcadoAdapter>();
+           
             services.AddControllers();
         }
 

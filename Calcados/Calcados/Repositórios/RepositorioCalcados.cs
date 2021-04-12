@@ -21,5 +21,10 @@ namespace Calcados.Repositórios
             _local.CalcadoItems.Add(request);
             _local.SaveChanges();
         }
+
+        public List<CalcadoItem> ObterListaDeCalcados()
+        {
+            return _local.CalcadoItems.ToList();            
+        }
     }
 }

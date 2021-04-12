@@ -1,16 +1,41 @@
 ﻿using Calcados.DTO.Calcados.RetornarCalcados;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Calcados.Repositórios;
 
 namespace Calcados.UseCase
 {
     public class RetornarCalcadoUseCase : IRetornarCalcadosUseCase
     {
-        public RetornarCalcadoResponse Executar(RetornarCalcadoRequest request)
+        private readonly IRepositorioCalcados _calcadoRepositorio;
+        
+        public RetornarCalcadoUseCase(IRepositorioCalcados calcadoRepositorio)
         {
-            throw new NotImplementedException();
+            _calcadoRepositorio = calcadoRepositorio;            
+        }
+                
+        public SelecionarCalcadosResponse Executar()
+        {
+            var response = new SelecionarCalcadosResponse();
+            var listaDeCalcados = _calcadoRepositorio.ObterListaDeCalcados();
+
+            try
+            {
+                if(listaDeCalcados == null)
+                {
+                    response.msg = "Nenhum item encontrado.";
+                    return response;                    
+                }
+                else
+                {
+                    response.calcados = _calcadoRepositorio.ObterListaDeCalcados();
+                    response.msg = "Lista de calçados carregada com sucesso!";
+                    return response;
+                }
+            }
+            catch
+            {
+                response.msg = "Falha ao carregar lista de calçados.";
+                return response;
+            }                        
         }
     }
 }

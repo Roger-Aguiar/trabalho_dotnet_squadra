@@ -1,10 +1,6 @@
 ﻿using Calcados.Bordas.Adapter;
 using Calcados.DTO.Calcados.AdicionarCalcado;
 using Calcados.Repositórios;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Calcados.UseCase
 {
