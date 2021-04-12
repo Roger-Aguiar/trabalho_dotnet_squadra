@@ -38,7 +38,8 @@ namespace Calcados
             services.AddScoped<IRepositorioCalcados, RepositorioCalcados>();
 
             services.AddScoped<IAdicionarCalcadoAdapter, AdicionarCalcadoAdapter>();
-           
+            services.AddScoped<IUpdateCalcadosAdapter, UpdateCalcadosAdapter>();
+
             services.AddControllers();
         }
 

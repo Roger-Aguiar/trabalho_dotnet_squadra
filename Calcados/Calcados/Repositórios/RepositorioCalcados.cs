@@ -1,5 +1,4 @@
 ﻿using Calcados.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +21,9 @@ namespace Calcados.Repositórios
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var deleteProduto = _local.CalcadoItems.Where(x => x.Id == id).FirstOrDefault();
+            _local.CalcadoItems.Remove(deleteProduto);
+            _local.SaveChanges();
         }
 
         public CalcadoItem ObterCalcadoPorId(int id)
@@ -44,7 +45,17 @@ namespace Calcados.Repositórios
 
         public bool Update(CalcadoItem calcado)
         {
-            throw new NotImplementedException();
+            var local = _local.Set<CalcadoItem>().Local.Where(x => x.Id == calcado.Id).FirstOrDefault();
+            
+            if (local != null)
+            {
+                _local.Entry(local).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+            }
+
+            _local.CalcadoItems.Update(calcado);
+            _local.SaveChanges();
+
+            return true;                                                                        
         }
     }
 }

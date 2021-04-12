@@ -5,6 +5,8 @@ using Calcados.Services;
 using Calcados.UseCase;
 using Calcados.DTO.Calcados.AdicionarCalcado;
 using Calcados.DTO.Calcados.RetornarCalcadoPorId;
+using Calcados.DTO.Calcados.AtualizarCalcado;
+using Calcados.Repositórios;
 
 namespace Calcados.Controllers
 {
@@ -13,21 +15,28 @@ namespace Calcados.Controllers
     public class CalcadoItemsController : ControllerBase
     {       
         private readonly ILogger<CalcadoItemsController> _logger;
+        //private readonly IRepositorioCalcados _repositorioCalcados;
         private readonly ICalcadoService _calcado;
         private readonly IAdicionarCalcadosUseCase _adicionarCalcadoUseCase;
         private readonly IRetornarCalcadosUseCase _calcadosSelecionados;
         private readonly IRetornarCalcadosPorIdUseCase _calcadoPorId;
+        private readonly IAtualizarCalcadosUseCase _atualizacao;
+        private readonly IDeletarCalcadosUseCase _delete;
 
         public CalcadoItemsController(ILogger<CalcadoItemsController> logger, ICalcadoService calcado, 
                                       IAdicionarCalcadosUseCase adicionarCalcadoUseCase,
                                       IRetornarCalcadosUseCase calcadosSelecionados,
-                                      IRetornarCalcadosPorIdUseCase calcadoPorId)
+                                      IRetornarCalcadosPorIdUseCase calcadoPorId,
+                                      IAtualizarCalcadosUseCase atualizacao,
+                                      IDeletarCalcadosUseCase delete)
         {
             _logger = logger;
             _calcado = calcado;
             _adicionarCalcadoUseCase = adicionarCalcadoUseCase;
             _calcadosSelecionados = calcadosSelecionados;
             _calcadoPorId = calcadoPorId;
+            _atualizacao = atualizacao;
+            _delete = delete;
         }
                 
         [HttpGet]
@@ -35,13 +44,7 @@ namespace Calcados.Controllers
         {
             return Ok(_calcadosSelecionados.Executar());
         }
-
-        /*[HttpGet("{id}")]
-        public IActionResult calcado(int id)
-        {
-            return Ok(_calcado.RetornarCalcadoPorId(id));
-        }*/
-
+                
         [HttpGet("{id}")]
         public IActionResult ObterCalcadoPorId(int id)
         {
@@ -62,11 +65,14 @@ namespace Calcados.Controllers
         {
             return Ok(_adicionarCalcadoUseCase.Executar(novoCalcado));            
         }
-
-        [HttpPut]
-        public IActionResult calcadoUpdate(CalcadoItem novoCalcado)
+                
+        [HttpPut("{id}")]
+        public IActionResult CalcadoUpdate([FromBody] AtualizarCalcadoRequest calcado, int id)
         {
-            return Ok(_calcado.AtualizarCalcado(novoCalcado));
+            if (id <= 0)
+                return BadRequest("Produto não encontrado.");
+            else
+                return Ok(_atualizacao.Executar(calcado, id));
         }
 
         [HttpDelete("{id}")]

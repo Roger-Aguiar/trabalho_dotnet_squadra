@@ -7,5 +7,7 @@ namespace Calcados.DTO.Calcados.AtualizarCalcado
 {
     public class AtualizarCalcadoResponse
     {
+        public string mensagem { get; set; }
+        public int id { get; set; }
     }
 }
