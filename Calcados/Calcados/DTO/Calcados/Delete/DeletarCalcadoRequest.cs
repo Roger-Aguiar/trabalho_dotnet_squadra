@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Calcados.DTO.Calcados.DeletarCalcado
+﻿namespace Calcados.DTO.Calcados.DeletarCalcado
 {
     public class DeletarCalcadoRequest
     {
+        public int id { get; set; }
     }
 }

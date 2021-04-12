@@ -1,16 +1,37 @@
 ﻿using Calcados.DTO.Calcados.DeletarCalcado;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Calcados.Repositórios;
 
 namespace Calcados.UseCase
 {
     public class DeletarCalcadoUseCase : IDeletarCalcadosUseCase
     {
+        private readonly IRepositorioCalcados _repositorioCalcados;
+
+        public DeletarCalcadoUseCase(IRepositorioCalcados repositorioCalcados)
+        {
+            _repositorioCalcados = repositorioCalcados;
+        }
+
         public DeletarCalcadoResponse Executar(DeletarCalcadoRequest request)
         {
-            throw new NotImplementedException();
+            var response = new DeletarCalcadoResponse();
+            var idCalcado = _repositorioCalcados.ObterCalcadoPorId(request.id);
+
+            try
+            {
+                if (request.id <= 0 || idCalcado == null)
+                    response.mensagem = "Produto não encontrado.";
+
+                _repositorioCalcados.Delete(request.id);
+                response.mensagem = "Operação realizada com sucesso!";
+
+            }
+            catch
+            {
+                response.mensagem = "Erro ao excluir registro.";                
+            }
+
+            return response;            
         }
     }
 }

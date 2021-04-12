@@ -1,22 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Calcados.Models;
 using Microsoft.Extensions.Logging;
 using Calcados.Services;
 using Calcados.UseCase;
 using Calcados.DTO.Calcados.AdicionarCalcado;
 using Calcados.DTO.Calcados.RetornarCalcadoPorId;
 using Calcados.DTO.Calcados.AtualizarCalcado;
-using Calcados.Repositórios;
+using Calcados.DTO.Calcados.DeletarCalcado;
 
 namespace Calcados.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CalcadoItemsController : ControllerBase
-    {       
-        private readonly ILogger<CalcadoItemsController> _logger;
-        //private readonly IRepositorioCalcados _repositorioCalcados;
-        private readonly ICalcadoService _calcado;
+    {      
+        
         private readonly IAdicionarCalcadosUseCase _adicionarCalcadoUseCase;
         private readonly IRetornarCalcadosUseCase _calcadosSelecionados;
         private readonly IRetornarCalcadosPorIdUseCase _calcadoPorId;
@@ -30,8 +27,7 @@ namespace Calcados.Controllers
                                       IAtualizarCalcadosUseCase atualizacao,
                                       IDeletarCalcadosUseCase delete)
         {
-            _logger = logger;
-            _calcado = calcado;
+            
             _adicionarCalcadoUseCase = adicionarCalcadoUseCase;
             _calcadosSelecionados = calcadosSelecionados;
             _calcadoPorId = calcadoPorId;
@@ -76,9 +72,18 @@ namespace Calcados.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult calcadoDelete(int id)
+        public IActionResult CalcadoDelete(int id)
         {
-            return Ok(_calcado.DeletarCalcado(id));
+            if(id <= 0)
+            {
+                return BadRequest("Produto não encontrado, verifique o código e tente novamente.");
+            }
+            else
+            {
+                var request = new DeletarCalcadoRequest();
+                request.id = id;
+                return Ok(_delete.Executar(request));
+            }
         }
     }
 }
